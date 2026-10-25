@@ -13,7 +13,7 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
    
    **kullandığı veri yapısı:** çift yönlü bağlı liste (doubly linked list)
    
-   **tercih gerekçesi:** arşivdeki içerikler arasında hem ileriye hem geriye doğru rahatça gezinebilmek ve aradan bir film silindiğinde dizilerdeki gibi diğer elemanları tek tek kaaydırmak zorunda kalmamak için
+   **tercih gerekçesi:** arşivdeki içerikler arasında hem ileriye hem geriye doğru rahatça gezinebilmek ve aradan bir film silindiğinde dizilerdeki gibi diğer elemanları tek tek kaaydırmak zorunda kalmamak
    
 2.*Esmanur KALALI (@Esmanur)*
 
@@ -55,5 +55,3 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
 
 ## yapay zeka kullanım beyanı
 projenin planlama, mimari tasarım ve görev dağılımı aşamalarında yapay zeka araçlarından bir fikir danışmanı olarak yararlanılmıştır. tüm veri yapı sınıfları, algoritmalar ve test kodları ekip üyeleri tarafından bizzat yazılarak ve kavranarak projeye aktarılmaktadır.
-
-   
