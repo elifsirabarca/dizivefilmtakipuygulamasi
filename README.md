@@ -8,6 +8,7 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
 
 ## ekip üyeleri, görev dağılımı ve veri yapıları
 1.*Elif Şira BARCA (@elifsirabarca)*
+
    **kılavuzdaki rolü:** kaydetme ve arşiv yönetimi
    
    **kullandığı veri yapısı:** çift yönlü bağlı liste (doubly linked list)
@@ -15,6 +16,7 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
    **tercih gerekçesi:** arşivdeki içerikler arasında hem ileriye hem geriye doğru rahatça gezinebilmek ve aradan bir film silindiğinde dizilerdeki gibi diğer elemanları tek tek kaaydırmak zorunda kalmamak için
    
 2.*Esmanur KALALI (@Esmanur)*
+
    **kılavuzdaki rolü:** silme ve izleme planı yönetimi
    
    **kullandığı veri yapısı:** kuyruk (custom queue)
@@ -22,6 +24,7 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
    **tercih gerekçesi:** izleme planı mantıken bir sıradır. listeye ilk eklenen içeriğin ilk sırada izlenmesi kuralına (ilk giren ilk çıkar) tam uyduğu için kuyruk yapısı seçilmiştir.
    
 3.*Filiz BAYIR (@filizbayir)*
+
    **kılavuzdaki rolü:** güncelleme ve durum takibi (geri alma)
    
    **kullandığı veri yapısı:** bağlı liste tabanlı yığın 
@@ -29,6 +32,7 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
    **tercih gerekçesi:** kullanıcının yaptığı son değişikliği veya son izlediği içeriği en üstte tutmak, hatalı bir işlem yapıldığında ise son durumu kolayca geri alabilmek (son giren ilk çıkar) için yığın yapısı tercih edilmiştir.
    
 4.*Leyla Nur KÖSE (@Leylanur)*
+
    **kılavuzdaki rolü:** sıralama ve sorgulama
    
    **kullandığı veri yapısı:** sıralama algoritması ve filtreleme
