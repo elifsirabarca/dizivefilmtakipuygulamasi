@@ -29,12 +29,16 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
    
 ## temel sınıf taslağı
  **Media(temel sınıf):** 'id', 'ad', 'tur', 'sure', 'izlendiMi', 'puan'
+ 
  **Film sınıfı:** Media sınıfından türer, 'yonetmen' bilgisi içerir.
+ 
  **Dizi sınıfı:** Media sınııfından türer, 'toplamBolum' ve 'izlenenBolum' bilgisi içerir.
 
 ## işleyiş ve kurallar
   *izlenen bölüm sayısı toplam bölüm sayısını kesinlikle aşamaz.
+  
   *aynı içerik aktif izleme planına ikinci kez eklenemez.
+  
   *sistemden bir içerik tamamen silinirken önce aktif planda aranır ve varsa plandan düşürülür, ardından ana arşivden kaldırılır.
 
 ## yapay zeka kullanım beyanı
