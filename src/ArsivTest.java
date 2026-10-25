@@ -143,8 +143,8 @@ public class ArsivTest {
     DoublyLinkedList arsiv=new DoublyLinkedList();
 
     //örnek film ve dizi oluşturma (id'ler şimdilik el ile 1,2)
-    Movie film1=new Movie(1, "interstellar", "bilim kurgu", 169, "christopher nolan");
-    Series dizi1=new Series(2, "dark", "gerilim", 60, 26);
+    Movie film1=new Movie(1, "saiyaara", "romantik/drama", 156, "mohit suri");
+    Series dizi1=new Series(2, "zanjeerain", "romantik/drama", 35, 39);
 
     //bolum ilerletme testi
     dizi1.bolumIlerlet();
