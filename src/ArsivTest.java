@@ -26,7 +26,7 @@ class Media {
 
   @Override
   public String toString() {
-    return "id: " + id + " | ad: " + ad + " | tur: " + tur + " | sure: " + sure + " dk | izlendi: " + (izlendiMi ? "evet" : "hayir") + puan;
+    return "id: " + id + " | ad: " + ad + " | tur: " + tur + " | sure: " + sure + " dk | izlendi: " + (izlendiMi ? "evet" : "hayir") + " | puan" + puan;
   }
 }
  //2.film sınıfı (medyadan türer)
