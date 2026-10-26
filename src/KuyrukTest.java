@@ -76,7 +76,7 @@ public IzlemePlaniKuyrugu(){
           
       }
     }
-    public static class Main {
+    public class KuyrukTest {
       public static void main (String[] args) {
         IzlemePlaniKuyrugu izlemePlani = new IzlemePlaniKuyrugu();
 
