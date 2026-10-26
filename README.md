@@ -53,165 +53,64 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
   
   *sistemden bir içerik tamamen silinirken önce aktif planda aranır ve varsa plandan düşürülür, ardından ana arşivden kaldırılır.
 
-  classDiagram
-    direction TB
+  ```mermaid
+flowchart TB
+    %% STİLLER
+    classDef domain fill:#e8f0fe,stroke:#4285f4,stroke-width:2px,color:#000
+    classDef kisi1 fill:#e6f4ea,stroke:#34a853,stroke-width:2px,color:#000
+    classDef kisi2 fill:#e0f7fa,stroke:#00acc1,stroke-width:2px,color:#000
+    classDef kisi3 fill:#f3e8fd,stroke:#9c27b0,stroke-width:2px,color:#000
+    classDef kisi4 fill:#fff8e1,stroke:#fbc02d,stroke-width:2px,color:#000
 
-```mermaid
-classDiagram
-    direction TB
+    %% 1. ORTAK ALTYAPI
+    subgraph S1 ["1. Ortak Çekirdek Katmanı (Domain)"]
+        direction TB
+        Enum["enum IzlemeDurumu<br/>• IZLENECEK<br/>• IZLENIYOR<br/>• TAMAMLANDI"]:::domain
+        Icerik["abstract class Icerik<br/>- id, ad, tur, sure, durum<br/>+ toplamSure()*<br/>+ kalanSure()*<br/>+ tamamlanmaOrani()*"]:::domain
+        Film["class Film<br/>- yonetmen<br/>+ izlendiIsaretle()"]:::domain
+        Dizi["class Dizi<br/>- toplamBolum, izlenenBolum<br/>+ bolumIzle()"]:::domain
 
-    class IzlemeDurumu {
-        <<enumeration>>
-        IZLENECEK
-        IZLENIYOR
-        TAMAMLANDI
-    }
+        Icerik --> Enum
+        Film -- miras alır --> Icerik
+        Dizi -- miras alır --> Icerik
+    end
 
-    class Icerik {
-        <<abstract>>
-        -int id
-        -String ad
-        -String tur
-        -int sure
-        -boolean izlendiMi
-        -double puan
-        -IzlemeDurumu durum
-        +getId() int
-        +getAd() String
-        +getTur() String
-        +getSure() int
-        +isIzlendiMi() boolean
-        +setIzlendiMi(boolean izlendiMi) void
-        +getPuan() double
-        +setPuan(double puan) void
-        +getDurum() IzlemeDurumu
-        +setDurum(IzlemeDurumu durum) void
-        +toplamSure() int
-        +kalanSure() int
-        +tamamlanmaOrani() double
-        +toString() String
-    }
+    %% 2. VE 3. KİŞİ (SOL ALT)
+    subgraph S2 ["1. Kişi: Arşiv (Bağlı Liste)"]
+        direction TB
+        DLL["DoublyLinkedList<br/>- bas, son, boyut<br/>+ ekle(Icerik)<br/>+ idIleBul(id)<br/>+ bastanYazdir()<br/>+ sondanYazdir()"]:::kisi1
+        Node["Node<br/>+ veri: Icerik<br/>+ onceki, sonraki"]:::kisi1
+        DLL --> Node
+    end
 
-    class Film {
-        -String yonetmen
-        +izlendiIsaretle(boolean izlendi) void
-        +getYonetmen() String
-        +setYonetmen(String yonetmen) void
-        +toplamSure() int
-        +kalanSure() int
-        +tamamlanmaOrani() double
-        +toString() String
-    }
+    subgraph S3 ["2. Kişi: İzleme Planı (Kuyruk)"]
+        direction TB
+        Kuyruk["IzlemePlaniKuyrugu<br/>- bas, son<br/>+ sirayaEkle(Icerik)<br/>+ siradanCikar()<br/>+ planiGoster()"]:::kisi2
+    end
 
-    class Dizi {
-        -int toplamBolum
-        -int izlenenBolum
-        +getToplamBolum() int
-        +getIzlenenBolum() int
-        +bolumIlerlet() boolean
-        +bolumIzle(int sayi) boolean
-        +toplamSure() int
-        +kalanSure() int
-        +tamamlanmaOrani() double
-        +toString() String
-    }
+    %% 4. VE 5. KİŞİ (SAĞ)
+    subgraph S4 ["3. Kişi: İşlem Geçmişi (Yığın)"]
+        direction TB
+        Yigin["IslemGecmisiYigini<br/>- tepe, boyut<br/>+ islemiKaydet(aciklama, Icerik)<br/>+ sonIslemiGeriAl()"]:::kisi3
+    end
 
-    Icerik --> IzlemeDurumu : durum
-    Film --|> Icerik
-    Dizi --|> Icerik
+    subgraph S5 ["4. Kişi: Sıralama ve Arama Servisi"]
+        direction TB
+        Kriter["enum SiralamaKriteri<br/>• AD, SURE, TAMAMLANMA"]:::kisi4
+        Sorgu["SorguFiltresi<br/>- ad, tur, durum, maxSure<br/>+ uyuyorMu(Icerik)"]:::kisi4
+        Sirala["IcerikSiralayici<br/>+ sirala(Icerik[], Kriter)<br/><i>Merge Sort O(n log n)</i>"]:::kisi4
+        Ara["IcerikSorgulayici<br/>+ adaGoreIkiliArama()<br/><i>Binary Search O(log n)</i>"]:::kisi4
 
-    class Node {
-        +Icerik veri
-        +Node onceki
-        +Node sonraki
-    }
+        Sirala --> Kriter
+        Ara --> Sorgu
+    end
 
-    class DoublyLinkedList {
-        -Node bas
-        -Node son
-        -int boyut
-        +ekle(Icerik media) boolean
-        +idIleBul(int id) Icerik
-        +bastanYazdir() void
-        +sondanYazdir() void
-        +getBoyut() int
-    }
-
-    DoublyLinkedList *-- Node
-    Node o-- Icerik : veri
-
-    class KuyrukDugumu {
-        +Icerik veri
-        +KuyrukDugumu sonraki
-    }
-
-    class IzlemePlaniKuyrugu {
-        -KuyrukDugumu bas
-        -KuyrukDugumu son
-        +bosMu() boolean
-        +sirayaEkle(Icerik yeniIcerik) void
-        +siradanCikar() void
-        +siradakiniGoster() void
-        +planiGoster() void
-    }
-
-    IzlemePlaniKuyrugu *-- KuyrukDugumu
-    KuyrukDugumu o-- Icerik : veri
-
-    class YiginDugumu {
-        +String islemAciklamasi
-        +Icerik etkilenenIcerik
-        +YiginDugumu sonraki
-    }
-
-    class IslemGecmisiYigini {
-        -YiginDugumu tepe
-        -int boyut
-        +bosMu() boolean
-        +islemiKaydet(String aciklama, Icerik icerik) void
-        +sonIslemiGeriAl() Icerik
-        +gecmisiGoster() void
-        +getBoyut() int
-    }
-
-    IslemGecmisiYigini *-- YiginDugumu
-    YiginDugumu o-- Icerik : etkilenenIcerik
-
-    class SiralamaKriteri {
-        <<enumeration>>
-        AD
-        SURE
-        TAMAMLANMA
-    }
-
-    class SorguFiltresi {
-        -String ad
-        -String tur
-        -IzlemeDurumu durum
-        -Integer maxKalanSure
-        +adIcerir(String ad) SorguFiltresi
-        +turEsit(String tur) SorguFiltresi
-        +durumEsit(IzlemeDurumu durum) SorguFiltresi
-        +maxKalanSure(int sure) SorguFiltresi
-        +uyuyorMu(Icerik icerik) boolean
-    }
-
-    class IcerikSiralayici {
-        +sirala(IcerikListesi, SiralamaKriteri)
-        +sirala(IcerikListesi, SiralamaKriteri, boolean tersMi)
-    }
-
-    class IcerikSorgulayici {
-        +sorgula(IcerikListesi, SorguFiltresi)
-        +adaGoreIkiliArama(IcerikListesi, String arananAd) int
-    }
-
-    IcerikSiralayici ..> SiralamaKriteri : uses
-    IcerikSiralayici ..> Icerik : sorts
-    IcerikSorgulayici ..> SorguFiltresi : uses
-    IcerikSorgulayici ..> Icerik : searches
-    SorguFiltresi ..> IzlemeDurumu : uses
-    SorguFiltresi ..> Icerik : filters
+    %% MODÜL BAĞLANTILARI
+    Node -.->|tutar| Icerik
+    Kuyruk -.->|kullanır| Icerik
+    Yigin -.->|kaydeder| Icerik
+    Sirala -.->|sıralar| Icerik
+    Ara -.->|arar| Icerik
 ```
 
 ## yapay zeka kullanım beyanı
