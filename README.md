@@ -56,7 +56,10 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
   classDiagram
     direction TB
 
-    %% 1. ORTAK NESNE KATMANI (DOMAIN)
+```mermaid
+classDiagram
+    direction TB
+
     class IzlemeDurumu {
         <<enumeration>>
         IZLENECEK
@@ -78,22 +81,22 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
         +getTur() String
         +getSure() int
         +isIzlendiMi() boolean
-        +setIzlendiMi(boolean) void
+        +setIzlendiMi(boolean izlendiMi) void
         +getPuan() double
-        +setPuan(double) void
+        +setPuan(double puan) void
         +getDurum() IzlemeDurumu
-        +setDurum(IzlemeDurumu) void
-        +toplamSure()* int
-        +kalanSure()* int
-        +tamamlanmaOrani()* double
+        +setDurum(IzlemeDurumu durum) void
+        +toplamSure() int
+        +kalanSure() int
+        +tamamlanmaOrani() double
         +toString() String
     }
 
     class Film {
         -String yonetmen
-        +izlendiIsaretle(boolean) void
+        +izlendiIsaretle(boolean izlendi) void
         +getYonetmen() String
-        +setYonetmen(String) void
+        +setYonetmen(String yonetmen) void
         +toplamSure() int
         +kalanSure() int
         +tamamlanmaOrani() double
@@ -106,7 +109,7 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
         +getToplamBolum() int
         +getIzlenenBolum() int
         +bolumIlerlet() boolean
-        +bolumIzle(int) boolean
+        +bolumIzle(int sayi) boolean
         +toplamSure() int
         +kalanSure() int
         +tamamlanmaOrani() double
@@ -117,7 +120,6 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
     Film --|> Icerik
     Dizi --|> Icerik
 
-    %% 2. 1. KİŞİ: ARŞİV (BAĞLI LİSTE)
     class Node {
         +Icerik veri
         +Node onceki
@@ -128,8 +130,8 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
         -Node bas
         -Node son
         -int boyut
-        +ekle(Icerik) boolean
-        +idIleBul(int) Icerik
+        +ekle(Icerik media) boolean
+        +idIleBul(int id) Icerik
         +bastanYazdir() void
         +sondanYazdir() void
         +getBoyut() int
@@ -138,7 +140,6 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
     DoublyLinkedList *-- Node
     Node o-- Icerik : veri
 
-    %% 3. 2. KİŞİ: İZLEME PLANI (KUYRUK)
     class KuyrukDugumu {
         +Icerik veri
         +KuyrukDugumu sonraki
@@ -148,7 +149,7 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
         -KuyrukDugumu bas
         -KuyrukDugumu son
         +bosMu() boolean
-        +sirayaEkle(Icerik) void
+        +sirayaEkle(Icerik yeniIcerik) void
         +siradanCikar() void
         +siradakiniGoster() void
         +planiGoster() void
@@ -157,7 +158,6 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
     IzlemePlaniKuyrugu *-- KuyrukDugumu
     KuyrukDugumu o-- Icerik : veri
 
-    %% 4. 3. KİŞİ: İŞLEM GEÇMİŞİ (YIĞIN)
     class YiginDugumu {
         +String islemAciklamasi
         +Icerik etkilenenIcerik
@@ -168,7 +168,7 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
         -YiginDugumu tepe
         -int boyut
         +bosMu() boolean
-        +islemiKaydet(String, Icerik) void
+        +islemiKaydet(String aciklama, Icerik icerik) void
         +sonIslemiGeriAl() Icerik
         +gecmisiGoster() void
         +getBoyut() int
@@ -177,7 +177,6 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
     IslemGecmisiYigini *-- YiginDugumu
     YiginDugumu o-- Icerik : etkilenenIcerik
 
-    %% 5. 4. KİŞİ: SIRALAMA & SORGULAMA
     class SiralamaKriteri {
         <<enumeration>>
         AD
@@ -190,25 +189,21 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
         -String tur
         -IzlemeDurumu durum
         -Integer maxKalanSure
-        +adIcerir(String) SorguFiltresi
-        +turEsit(String) SorguFiltresi
-        +durumEsit(IzlemeDurumu) SorguFiltresi
-        +maxKalanSure(int) SorguFiltresi
-        +uyuyorMu(Icerik) boolean
+        +adIcerir(String ad) SorguFiltresi
+        +turEsit(String tur) SorguFiltresi
+        +durumEsit(IzlemeDurumu durum) SorguFiltresi
+        +maxKalanSure(int sure) SorguFiltresi
+        +uyuyorMu(Icerik icerik) boolean
     }
 
     class IcerikSiralayici {
-        +sirala(Icerik[], SiralamaKriteri) Icerik[]$
-        +sirala(Icerik[], SiralamaKriteri, boolean) Icerik[]$
-        -mergeSort(Icerik[], Icerik[], int, int, SiralamaKriteri)$ void
-        -birlestir(Icerik[], Icerik[], int, int, int, SiralamaKriteri)$ void
-        -karsilastir(Icerik, Icerik, SiralamaKriteri)$ int
-        -tersCevir(Icerik[])$ void
+        +sirala(IcerikListesi, SiralamaKriteri)
+        +sirala(IcerikListesi, SiralamaKriteri, boolean tersMi)
     }
 
     class IcerikSorgulayici {
-        +sorgula(Icerik[], SorguFiltresi) Icerik[]$
-        +adaGoreIkiliArama(Icerik[], String) int$
+        +sorgula(IcerikListesi, SorguFiltresi)
+        +adaGoreIkiliArama(IcerikListesi, String arananAd) int
     }
 
     IcerikSiralayici ..> SiralamaKriteri : uses
@@ -217,6 +212,7 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
     IcerikSorgulayici ..> Icerik : searches
     SorguFiltresi ..> IzlemeDurumu : uses
     SorguFiltresi ..> Icerik : filters
+```
 
 ## yapay zeka kullanım beyanı
 projenin planlama, mimari tasarım ve görev dağılımı aşamalarında yapay zeka araçlarından bir fikir danışmanı olarak yararlanılmıştır. tüm veri yapı sınıfları, algoritmalar ve test kodları ekip üyeleri tarafından bizzat yazılarak ve kavranarak projeye aktarılmaktadır.
