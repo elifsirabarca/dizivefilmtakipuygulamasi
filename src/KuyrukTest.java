@@ -22,14 +22,14 @@ class IzlemePlaniKuyrugu{
   private Dugum bas;
   private Dugum son;
 
-public IzlemePLanKuyrugu(){
+public IzlemePlaniKuyrugu(){
   this.bas = null;
   this.son= null;
 }
   public boolean bosMu(){
     return bas == null;
   }
-  public void sirayaEkle(string ad,String tur){
+  public void sirayaEkle(String ad,String tur){
     Icerik yeniIcerik = new Icerik(ad,tur);
     Dugum yeniDugum= new Dugum(yeniIcerik);
       if  (bosMu()) {
@@ -43,31 +43,32 @@ public IzlemePLanKuyrugu(){
     System.out.println("-> \"" +ad + "\" izleme planına eklendi.");
       }
 
-  public void SiradanCikar(){
+  public void siradanCikar(){
     if (bosMu()){
       System.out.println("uyarı: izleme planı zaten boş!");
       return;
     }
-    System.out.println(<- \"" +bas.veri.ad + "\" izlendi/ plandan çıkarıldı ve sıradan düşürüldü");
+    System.out.println("<- \"" +bas.veri.ad + "\" izlendi/ plandan çıkarıldı ve sıradan düşürüldü");
     bas = bas.sonraki;
     if(bas== null){
       son= null;
     }
   }
-  public void siradakinigoster(){
+  public void siradakiniGoster(){
     if (bosMu()){
       System.out.println("izleme planında şu anda hiç içerik yok.");
     } 
     else{
       System.out.println("sıradaki izlenecek içerik: "+bas.veri.ad +" ( " +bas.veri.tur +")");
     }
+  }
     public void planiGoster(){
-      if(bosMu()){
+      if(!bosMu()){
         System.out.println("\n ~~ Güncel İzleme Planı (Kuyruk) ~~");
         Dugum gecici =bas;
         int sira =1;
         while (gecici != null){
-          System.out.priintln(sira +"." +gecici.veri.ad +"(" +gecici.veri.tur +")");
+          System.out.println(sira +"." +gecici.veri.ad +"(" +gecici.veri.tur +")");
           gecici =gecici.sonraki;
           sira ++;
         }
@@ -75,15 +76,15 @@ public IzlemePLanKuyrugu(){
           
       }
     }
-    public class Main {
+    public static class Main {
       public static void main (String[] args) {
-        IzlemePlaniKuyrugu izlemPLani = new izlemePlaniKuyrugu();
+        IzlemePlaniKuyrugu izlemePlani = new IzlemePlaniKuyrugu();
 
         System.out.println(" ~~ İZLEME PLANI (KUYRUK) TESTİ~~");
         
-        izlemePLani.sirayaEkle("Inception " ,"Film");
-        izlemePLani.sirayaEkle("Breaking Bad " ,"dizi");
-        izlemePLani.sirayaEkle("Interstellar " ,"Film");
+        izlemePlani.sirayaEkle("Inception " ,"Film");
+        izlemePlani.sirayaEkle("Breaking Bad " ,"dizi");
+        izlemePlani.sirayaEkle("Interstellar " ,"Film");
 
         
         izlemePlani.planiGoster();
