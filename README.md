@@ -53,5 +53,170 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
   
   *sistemden bir içerik tamamen silinirken önce aktif planda aranır ve varsa plandan düşürülür, ardından ana arşivden kaldırılır.
 
+  classDiagram
+    direction TB
+
+    %% 1. ORTAK NESNE KATMANI (DOMAIN)
+    class IzlemeDurumu {
+        <<enumeration>>
+        IZLENECEK
+        IZLENIYOR
+        TAMAMLANDI
+    }
+
+    class Icerik {
+        <<abstract>>
+        -int id
+        -String ad
+        -String tur
+        -int sure
+        -boolean izlendiMi
+        -double puan
+        -IzlemeDurumu durum
+        +getId() int
+        +getAd() String
+        +getTur() String
+        +getSure() int
+        +isIzlendiMi() boolean
+        +setIzlendiMi(boolean) void
+        +getPuan() double
+        +setPuan(double) void
+        +getDurum() IzlemeDurumu
+        +setDurum(IzlemeDurumu) void
+        +toplamSure()* int
+        +kalanSure()* int
+        +tamamlanmaOrani()* double
+        +toString() String
+    }
+
+    class Film {
+        -String yonetmen
+        +izlendiIsaretle(boolean) void
+        +getYonetmen() String
+        +setYonetmen(String) void
+        +toplamSure() int
+        +kalanSure() int
+        +tamamlanmaOrani() double
+        +toString() String
+    }
+
+    class Dizi {
+        -int toplamBolum
+        -int izlenenBolum
+        +getToplamBolum() int
+        +getIzlenenBolum() int
+        +bolumIlerlet() boolean
+        +bolumIzle(int) boolean
+        +toplamSure() int
+        +kalanSure() int
+        +tamamlanmaOrani() double
+        +toString() String
+    }
+
+    Icerik --> IzlemeDurumu : durum
+    Film --|> Icerik
+    Dizi --|> Icerik
+
+    %% 2. 1. KİŞİ: ARŞİV (BAĞLI LİSTE)
+    class Node {
+        +Icerik veri
+        +Node onceki
+        +Node sonraki
+    }
+
+    class DoublyLinkedList {
+        -Node bas
+        -Node son
+        -int boyut
+        +ekle(Icerik) boolean
+        +idIleBul(int) Icerik
+        +bastanYazdir() void
+        +sondanYazdir() void
+        +getBoyut() int
+    }
+
+    DoublyLinkedList *-- Node
+    Node o-- Icerik : veri
+
+    %% 3. 2. KİŞİ: İZLEME PLANI (KUYRUK)
+    class KuyrukDugumu {
+        +Icerik veri
+        +KuyrukDugumu sonraki
+    }
+
+    class IzlemePlaniKuyrugu {
+        -KuyrukDugumu bas
+        -KuyrukDugumu son
+        +bosMu() boolean
+        +sirayaEkle(Icerik) void
+        +siradanCikar() void
+        +siradakiniGoster() void
+        +planiGoster() void
+    }
+
+    IzlemePlaniKuyrugu *-- KuyrukDugumu
+    KuyrukDugumu o-- Icerik : veri
+
+    %% 4. 3. KİŞİ: İŞLEM GEÇMİŞİ (YIĞIN)
+    class YiginDugumu {
+        +String islemAciklamasi
+        +Icerik etkilenenIcerik
+        +YiginDugumu sonraki
+    }
+
+    class IslemGecmisiYigini {
+        -YiginDugumu tepe
+        -int boyut
+        +bosMu() boolean
+        +islemiKaydet(String, Icerik) void
+        +sonIslemiGeriAl() Icerik
+        +gecmisiGoster() void
+        +getBoyut() int
+    }
+
+    IslemGecmisiYigini *-- YiginDugumu
+    YiginDugumu o-- Icerik : etkilenenIcerik
+
+    %% 5. 4. KİŞİ: SIRALAMA & SORGULAMA
+    class SiralamaKriteri {
+        <<enumeration>>
+        AD
+        SURE
+        TAMAMLANMA
+    }
+
+    class SorguFiltresi {
+        -String ad
+        -String tur
+        -IzlemeDurumu durum
+        -Integer maxKalanSure
+        +adIcerir(String) SorguFiltresi
+        +turEsit(String) SorguFiltresi
+        +durumEsit(IzlemeDurumu) SorguFiltresi
+        +maxKalanSure(int) SorguFiltresi
+        +uyuyorMu(Icerik) boolean
+    }
+
+    class IcerikSiralayici {
+        +sirala(Icerik[], SiralamaKriteri) Icerik[]$
+        +sirala(Icerik[], SiralamaKriteri, boolean) Icerik[]$
+        -mergeSort(Icerik[], Icerik[], int, int, SiralamaKriteri)$ void
+        -birlestir(Icerik[], Icerik[], int, int, int, SiralamaKriteri)$ void
+        -karsilastir(Icerik, Icerik, SiralamaKriteri)$ int
+        -tersCevir(Icerik[])$ void
+    }
+
+    class IcerikSorgulayici {
+        +sorgula(Icerik[], SorguFiltresi) Icerik[]$
+        +adaGoreIkiliArama(Icerik[], String) int$
+    }
+
+    IcerikSiralayici ..> SiralamaKriteri : uses
+    IcerikSiralayici ..> Icerik : sorts
+    IcerikSorgulayici ..> SorguFiltresi : uses
+    IcerikSorgulayici ..> Icerik : searches
+    SorguFiltresi ..> IzlemeDurumu : uses
+    SorguFiltresi ..> Icerik : filters
+
 ## yapay zeka kullanım beyanı
 projenin planlama, mimari tasarım ve görev dağılımı aşamalarında yapay zeka araçlarından bir fikir danışmanı olarak yararlanılmıştır. tüm veri yapı sınıfları, algoritmalar ve test kodları ekip üyeleri tarafından bizzat yazılarak ve kavranarak projeye aktarılmaktadır.
