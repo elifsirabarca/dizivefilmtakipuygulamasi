@@ -18,7 +18,7 @@ public class YiginTest {
             
           }
         }
-        public YiginTakip (String baslik, int toplamBolum){
+        public YiginTest (String baslik, int toplamBolum){
           if(baslik == null || baslik.trim().isEmpty()){
             throw new IllegalArgumentException("Başlık boş olamaz.");
           }
