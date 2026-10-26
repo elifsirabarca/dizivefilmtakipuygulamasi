@@ -53,65 +53,13 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
   
   *sistemden bir içerik tamamen silinirken önce aktif planda aranır ve varsa plandan düşürülür, ardından ana arşivden kaldırılır.
 
-  ```mermaid
-flowchart TB
-    %% STİLLER
-    classDef domain fill:#e8f0fe,stroke:#4285f4,stroke-width:2px,color:#000
-    classDef kisi1 fill:#e6f4ea,stroke:#34a853,stroke-width:2px,color:#000
-    classDef kisi2 fill:#e0f7fa,stroke:#00acc1,stroke-width:2px,color:#000
-    classDef kisi3 fill:#f3e8fd,stroke:#9c27b0,stroke-width:2px,color:#000
-    classDef kisi4 fill:#fff8e1,stroke:#fbc02d,stroke-width:2px,color:#000
-
-    %% 1. ORTAK ALTYAPI
-    subgraph S1 ["1. Ortak Çekirdek Katmanı (Domain)"]
-        direction TB
-        Enum["enum IzlemeDurumu<br/>• IZLENECEK<br/>• IZLENIYOR<br/>• TAMAMLANDI"]:::domain
-        Icerik["abstract class Icerik<br/>- id, ad, tur, sure, durum<br/>+ toplamSure()*<br/>+ kalanSure()*<br/>+ tamamlanmaOrani()*"]:::domain
-        Film["class Film<br/>- yonetmen<br/>+ izlendiIsaretle()"]:::domain
-        Dizi["class Dizi<br/>- toplamBolum, izlenenBolum<br/>+ bolumIzle()"]:::domain
-
-        Icerik --> Enum
-        Film -- miras alır --> Icerik
-        Dizi -- miras alır --> Icerik
-    end
-
-    %% 2. VE 3. KİŞİ (SOL ALT)
-    subgraph S2 ["1. Kişi: Arşiv (Bağlı Liste)"]
-        direction TB
-        DLL["DoublyLinkedList<br/>- bas, son, boyut<br/>+ ekle(Icerik)<br/>+ idIleBul(id)<br/>+ bastanYazdir()<br/>+ sondanYazdir()"]:::kisi1
-        Node["Node<br/>+ veri: Icerik<br/>+ onceki, sonraki"]:::kisi1
-        DLL --> Node
-    end
-
-    subgraph S3 ["2. Kişi: İzleme Planı (Kuyruk)"]
-        direction TB
-        Kuyruk["IzlemePlaniKuyrugu<br/>- bas, son<br/>+ sirayaEkle(Icerik)<br/>+ siradanCikar()<br/>+ planiGoster()"]:::kisi2
-    end
-
-    %% 4. VE 5. KİŞİ (SAĞ)
-    subgraph S4 ["3. Kişi: İşlem Geçmişi (Yığın)"]
-        direction TB
-        Yigin["IslemGecmisiYigini<br/>- tepe, boyut<br/>+ islemiKaydet(aciklama, Icerik)<br/>+ sonIslemiGeriAl()"]:::kisi3
-    end
-
-    subgraph S5 ["4. Kişi: Sıralama ve Arama Servisi"]
-        direction TB
-        Kriter["enum SiralamaKriteri<br/>• AD, SURE, TAMAMLANMA"]:::kisi4
-        Sorgu["SorguFiltresi<br/>- ad, tur, durum, maxSure<br/>+ uyuyorMu(Icerik)"]:::kisi4
-        Sirala["IcerikSiralayici<br/>+ sirala(Icerik[], Kriter)<br/><i>Merge Sort O(n log n)</i>"]:::kisi4
-        Ara["IcerikSorgulayici<br/>+ adaGoreIkiliArama()<br/><i>Binary Search O(log n)</i>"]:::kisi4
-
-        Sirala --> Kriter
-        Ara --> Sorgu
-    end
-
-    %% MODÜL BAĞLANTILARI
-    Node -.->|tutar| Icerik
-    Kuyruk -.->|kullanır| Icerik
-    Yigin -.->|kaydeder| Icerik
-    Sirala -.->|sıralar| Icerik
-    Ara -.->|arar| Icerik
-```
 
 ## yapay zeka kullanım beyanı
-projenin planlama, mimari tasarım ve görev dağılımı aşamalarında yapay zeka araçlarından bir fikir danışmanı olarak yararlanılmıştır. tüm veri yapı sınıfları, algoritmalar ve test kodları ekip üyeleri tarafından bizzat yazılarak ve kavranarak projeye aktarılmaktadır.
+
+bu projenin geliştirilme sürecinde yapay zeka araçlarından,
+* 4 farklı takım arkadaşının yazdığı kodların birbiriyle uyumlu hale getirilmesi,
+* yazım ve derleme hatalarının tespiti,
+* veri yapıları arasındaki mantıksal bağlantıların kurulması ve uml diyagramının tasarlanması,
+
+aşamalarında bir fikir aracı olarak yararlanılmıştır. tüm veri yapısı sınıfları, algoritmalar ve test kodları ekip üyeleri tarafından bizzat yazılarak ve kavranarak projeye aktarılmaktadır.
+
