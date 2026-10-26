@@ -1,28 +1,46 @@
+enum IzlemeDurumu {
+  IZLENECEK,
+  IZLENIYOR,
+  TAMAMLANDI
+}
 //1.temel medya (içerik) sınıfı
-class Media {
+abstract class Icerik {
   private int id; //ID
   private String ad;
   private String tur;
   private int sure;
   private boolean izlendiMi;
   private double puan;
+  private IzlemeDurumu durum;
 
-  public Media (int id, String ad, String tur, int sure) {
+  public Icerik (int id, String ad, String tur, int sure) {
     this.id=id;
     this.ad=ad;
     this.tur=tur;
     this.sure=sure;
     this.izlendiMi=false;
     this.puan=0.0;
+    this.durum=IzlemeDurumu.IZLENECEK;
   }
   public int getId() {return id;}
   public String getAd() {return ad;}
   public String getTur() {return tur;}
   public int getSure() {return sure;}
   public boolean isIzlendiMi() {return izlendiMi;}
-  public void setIzlendiMi(boolean izlendiMi) {this.izlendiMi=izlendiMi;}
+  public void setIzlendiMi(boolean izlendiMi) {
+    this.izlendiMi=izlendiMi;
+    this.durum=izlendiMi ? IzlemeDurumu.TAMAMLANDI : IzlemeDurumu.IZLENECEK;
+  }
   public double getPuan() {return puan;}
   public void setPuan(double puan) {this.puan=puan;}
+  public IzlemeDurumu getDurum() {return durum;}
+  public void setDurum(IzlemeDurumu durum) {
+    this.durum=durum;
+    this.izlendiMi=(durum==IzlemeDurumu.TAMAMLANDI);
+  }
+   public abstract int toplamSure();
+   public abstract int kalanSure();
+   public abstract double tamamlanmaOrani();
 
   @Override
   public String toString() {
@@ -30,27 +48,42 @@ class Media {
   }
 }
  //2.film sınıfı (medyadan türer)
-class Movie extends Media {
+class Film extends Icerik {
   private String yonetmen;
 
-  public Movie(int id, String ad, String tur, int sure, String yonetmen) {
+  public Film(int id, String ad, String tur, int sure, String yonetmen) {
     super(id, ad, tur, sure);
     this.yonetmen=yonetmen;
+  }
+  public void izlendiIsaretle(boolean izlendi) {
+    setIzlendiMi(izlendi);
   }
   public String getYonetmen() {return yonetmen;}
   public void setYonetmen(String yonetmen) {this.yonetmen=yonetmen;}
 
+  @Override 
+  public int toplamSure() {
+    return getSure();
+  }
+  @Override
+  public int kalanSure() {
+    return isIzlendiMi() ? 0 : getSure();
+  }
+  @Override
+  public double tamamlanmaOrani() {
+    return isIzlendiMi() ? 100.0 : 0.0;
+  }
   @Override
   public String toString() {
     return super.toString() + " | yonetmen: " + yonetmen;
   }
 }
 //3.dizi sınıfı (medyadan türer)
-class Series extends Media {
+class Dizi extends Icerik {
   private int toplamBolum;
   private int izlenenBolum;
 
-  public Series(int id, String ad, String tur, int sure, int toplamBolum) {
+  public Dizi(int id, String ad, String tur, int sure, int toplamBolum) {
     super(id, ad, tur, sure);
     if (toplamBolum<0) {
       throw new IllegalArgumentException("toplam bolum sayisi negatif olamaz.");
@@ -61,10 +94,16 @@ class Series extends Media {
   public int getToplamBolum() {return toplamBolum;}
   public int getIzlenenBolum() {return izlenenBolum;}
   public boolean bolumIlerlet() {
+    return bolumIzle(1);
+  }
+  public boolean bolumIzle(int sayi) {
     if (izlenenBolum<toplamBolum) {
-      izlenenBolum++;
-      if (izlenenBolum==toplamBolum) {
-        setIzlendiMi(true);
+      izlenenBolum+=sayi;;
+      if (izlenenBolum>=toplamBolum) {
+        izlenenBolum=toplamBolum;
+        setDurum(IzlemeDurumu.TAMAMLANDI);
+      } else {
+        setDurum(IzlemeDurumu.IZLENIYOR);
       }
       return true;
     }
@@ -72,16 +111,30 @@ class Series extends Media {
   }
 
   @Override
+  public int toplamSure() {
+    return toplamBolum*getSure();
+  }
+  @Override
+  public int kalanSure() {
+    return (toplamBolum-izlenenBolum)*getSure();
+  }
+  @Override
+  public double tamamlanmaOrani() {
+    if (toplamBolum==0) return 0.0;
+    return((double) izlenenBolum/toplamBolum)*100.0;
+  }
+  
+  @Override
   public String toString() {
     return super.toString() + " | bolum: " + izlenenBolum + "/" + toplamBolum;
   }
 }
 //4.çift yönlü bağlı liste düğümü (node)
 class Node {
-  public Media veri;
+  public Icerik veri;
   public Node onceki;
   public Node sonraki;
-  public Node(Media veri) {
+  public Node(Icerik veri) {
     this.veri=veri;
     this.onceki=null;
     this.sonraki=null;
@@ -97,7 +150,7 @@ class DoublyLinkedList {
     this.son=null;
     this.boyut=0;
   }
-  public void ekle(Media media) {
+  public void ekle(Icerik media) {
     Node yeniDugum=new Node(media);
     if (bas==null) {
       bas=yeniDugum;
@@ -109,7 +162,7 @@ class DoublyLinkedList {
     }
     boyut++;
   }
-  public Media idIleBul(int id) {
+  public Icerik idIleBul(int id) {
     Node guncel=bas;
     while (guncel!=null) {
       if (guncel.veri.getId()==id) {
@@ -143,8 +196,8 @@ public class ArsivTest {
     DoublyLinkedList arsiv=new DoublyLinkedList();
 
     //örnek film ve dizi oluşturma (id'ler şimdilik el ile 1,2)
-    Movie film1=new Movie(1, "saiyaara", "romantik/drama", 156, "mohit suri");
-    Series dizi1=new Series(2, "zanjeerain", "romantik/drama", 35, 39);
+    Film film1=new Film(1, "saiyaara", "romantik/drama", 156, "mohit suri");
+    Dizi dizi1=new Dizi(2, "zanjeerain", "romantik/drama", 35, 39);
 
     //bolum ilerletme testi
     dizi1.bolumIlerlet();
