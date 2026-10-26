@@ -40,11 +40,11 @@ veri yapıları dönem sonu projesi/dizivefilmtakipuygulamasi
    **tercih gerekçesi:** arşivdeki içerikleri sürelerine, bölüm sayılarına veya ada göre düzenli dizmek ve ayrıca kullanıcının seçtiği türe göre listeyi filtreleyebilmek için temel sıralama ve arama yöntemleri kullanılacaktır.
    
 ## temel sınıf taslağı
- **Media(temel sınıf):** 'id', 'ad', 'tur', 'sure', 'izlendiMi', 'puan'
+ **Icerik(temel sınıf):** 'id', 'ad', 'tur', 'sure', 'izlendiMi', 'puan'
  
- **Film sınıfı:** Media sınıfından türer, 'yonetmen' bilgisi içerir.
+ **Film sınıfı:** Icerik sınıfından türer, 'yonetmen' bilgisi içerir.
  
- **Dizi sınıfı:** Media sınııfından türer, 'toplamBolum' ve 'izlenenBolum' bilgisi içerir.
+ **Dizi sınıfı:** Icerik sınııfından türer, 'toplamBolum' ve 'izlenenBolum' bilgisi içerir.
 
 ## işleyiş ve kurallar
   *izlenen bölüm sayısı toplam bölüm sayısını kesinlikle aşamaz.
