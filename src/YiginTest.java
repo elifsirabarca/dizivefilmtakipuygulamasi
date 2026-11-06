@@ -126,10 +126,76 @@ public class YiginTest {
 
           return true;
         }
+
+        public void gecmisiYazdir() {
+                if(tepe == null) {
+                        System.out.println("Geçmiş boş.");
+                        return;
+                }
+
+                Durum gecici = tepe;
+                int sira = 1;
+
+                System.out.println("Güncelleme geçmişi (en son işlem önce):");
+
+                while (gecici != null) {
+                        System.out.println(
+                                sira + ". " + gecici.baslik + ": "
+                                + gecici.izlenenBolum + "/" + gecici.toplamBolum
+                                + " bölüm, izlendi mi: " + gecici.izlendiMi
+                                + ", plan sırası: " + gecici.planSirasi
+                        );
+
+                        gecici = gecici.onceki;
+                        sira++;
+                }
+           } 
         @Override
         public String toString(){
           return baslik + ": " + izlenenBolum + "/" +toplamBolum
             + " bölüm, izlendi mi: " +izlendiMi
             + ", plan sırası: " + planSirasi;      
         }
+
+        public static void main(String[] args){
+                YiginTest dizi = new YiginTest("Örnek dizi", 10);
+
+                System.out.println("Başlangıç: " + dizi);
+
+                dizi.bolumİzle();
+                System.out.println("Bir bölüm izledikten sonra: " + dizi);
+
+                dizi.planSirasiniDegistir(2);
+                System.out.println("Plan sırası değişince: " + dizi);
+
+                dizi.izlendiDurumunuDegistir();
+                System.out.println("İzlendi durumu değişince: " + dizi);
+
+                dizi.geriAl();
+                System.out.println("Geri alınınca: " + dizi);
+
+                dizi.izlenenBolumSayisiniGuncelle(5);
+                System.out.println("Bölüm sayısı güncellenince: " + dizi);
+
+                dizi.icerikBilgileriniGuncelle("Yeni Dizi", 12);
+                System.out.println("İçerik bilgileri güncellenince: " + dizi);
+
+                dizi.gecmisiYazdir();
+
+                dizi.geriAl();
+                System.out.println("Geri alınınca: " + dizi);
+
+                dizi.geriAl();
+                System.out.println("Bir kez daha geri alınınca: " + dizi);
+
+                YiginTest sinirTesti = new YiginTest("Sınır Test", 2);
+                sinirTesti.izlenenBolumSayisiniGuncelle(2);
+
+                boolean yeniBolumIzlendi = sinirTesti.bolumIzle();
+
+                System.out.println(
+                        "Toplam bölüme ulaşıldıktan sonra yeni bölüm izleme sonucu: "
+                        + yeniBolumIzlendi
+                );
+       } 
 }
