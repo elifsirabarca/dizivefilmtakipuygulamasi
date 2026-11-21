@@ -189,6 +189,41 @@ class DoublyLinkedList {
     }
   }
   public int getBoyut() {return boyut;}
+  public boolean sil(int id) {
+  Node guncel=bas;
+  while(guncel!=null) {
+  if(guncel.veri.getId()==id) {
+    if(guncel==bas&&guncel==son) {
+      bas=null;
+      son=null;
+    } else if(guncel==bas) {
+      bas=bas.sonraki;
+      bas.onceki=null;
+    } else if(guncel==son) {
+      son=son.onceki;
+      son.sonraki=null;
+    } else {
+    guncel.onceki.sonraki=guncel.sonraki;
+    guncel.sonraki.onceki=guncel.onceki;
+  }
+  boyut--;
+  return true;
+}
+guncel=guncel.sonraki;
+}
+return false;
+}
+public Icerik[] diziyeCevir() {
+  Icerik[] dizi=new Icerik[boyut];
+  Node guncel=bas;
+  int i=0;
+  while(guncel!=null) {
+  dizi[i]=guncel.veri;
+  i++;
+  guncel=guncel.sonraki;
+}
+return dizi;
+}
 }
 //6.çalıştırıcı ana sınıf (çalıştığını gösterecek test kodu)
 public class ArsivTest {
