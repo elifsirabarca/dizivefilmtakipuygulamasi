@@ -1,4 +1,4 @@
-// Siralama ve sorgulama icin kucuk test. Calistir
+// Siralama ve sorgulama icin kucuk test.
 public class SiralamaSorguTest {
     private static int gecen = 0;
     private static int kalan = 0;
