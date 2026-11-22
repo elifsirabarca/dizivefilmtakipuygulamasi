@@ -1,3 +1,4 @@
+//kullanıcının belirlediği kriterlere göre içerikleri filtreleyen sorgu-filtre sınıfı.
 public class SorguFiltresi {
     private String ad;               
     private String tur;                
