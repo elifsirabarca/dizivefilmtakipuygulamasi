@@ -1,201 +1,109 @@
 public class YiginTest {
-        private String baslik;
-        private int toplamBolum;
-        private int izlenenBolum;
-        private boolean izlendiMi;
-        private int planSirasi;
+    private final Icerik icerik;
 
-        private Durum tepe;
+    private Durum tepe;
 
-        public static class Durum {
-          private String baslik;
-          private int toplamBolum;
-          private int izlenenBolum;
-          private boolean izlendiMi;
-          private int planSirasi;      
-          private Durum onceki;
+    private static class Durum {
+        private final String ad;
+        private final String tur;
+        private final int sure;
+        private final boolean izlendiMi;
+        private final double puan;
+        private final IzlemeDurumu izlemeDurumu;
+        private final Integer toplamBolum;
+        private final Integer izlenenBolum;
+        private final Durum onceki;
 
-          private Durum (String baslik, int toplamBolum, int izlenenBolum, boolean izlendiMi, int planSirasi, Durum onceki) {
-            this.baslik = baslik;
-            this.toplamBolum = toplamBolum;
-            this.izlenenBolum = izlenenBolum;
-            this.izlendiMi = izlendiMi;
-            this.planSirasi = planSirasi;      
+        private Durum(Icerik icerik, Durum onceki) {
+            this.ad = icerik.getAd();
+            this.tur = icerik.getTur();
+            this.sure = icerik.getSure();
+            this.izlendiMi = icerik.isIzlendiMi();
+            this.puan = icerik.getPuan();
+            this.izlemeDurumu = icerik.getDurum();
+
+            if (icerik instanceof Dizi) {
+                Dizi dizi = (Dizi) icerik;
+                this.toplamBolum = dizi.getToplamBolum();
+                this.izlenenBolum = dizi.getIzlenenBolum();
+            } else {
+                this.toplamBolum = null;
+                this.izlenenBolum = null;
+            }
+
             this.onceki = onceki;
-            
-          }
         }
-        public YiginTest (String baslik, int toplamBolum){
-          if(baslik == null || baslik.trim().isEmpty()){
-            throw new IllegalArgumentException("Başlık boş olamaz.");
-          }
-          if(toplamBolum < 0){
-            throw new IllegalArgumentException(
-              "Toplam bölüm sayısı negatif olamaz."
-              );
-          }
-          this.baslik = baslik;
-          this.toplamBolum = toplamBolum;
-          this.izlenenBolum = 0;
-          this.izlendiMi = false;
-          this.planSirasi = 0;
-          this.tepe = null;
+    }
+
+    public YiginTest(Icerik icerik) {
+        if (icerik == null) {
+            throw new IllegalArgumentException("İçerik null olamaz.");
         }
-        private void durumuKaydet(){
-          tepe = new Durum(
-                  baslik,
-                  toplamBolum,
-                  izlenenBolum, 
-                  izlendiMi, 
-                  planSirasi, 
-                  tepe);
-        }
-        public boolean bolumİzle(){
-          if(izlenenBolum >= toplamBolum){
+
+        this.icerik = icerik;
+        this.tepe = null;
+    }
+
+    public void durumuKaydet() {
+        tepe = new Durum(icerik, tepe);
+    }
+
+    public boolean geriAl() {
+        if (tepe == null) {
             return false;
-          }
-          durumuKaydet();
-          izlenenBolum++;
-          return true;
-        }
-        public void izlendiDurumunuDegistir(){
-          durumuKaydet();
-          izlendiMi = !izlendiMi;
-        }
-        public void planSirasiniDegistir(int yeniSira) {
-                if (yeniSira < 0) {
-                        throw new IllegalArgumentException("Plan sırası negatif olamaz.");
-                }
-                if (yeniSira == planSirasi) {
-                        return;
-                }    
-                durumuKaydet();
-                planSirasi = yeniSira;
-        }
-        public void izlenenBolumSayisiniGuncelle(int yeniSayi) {
-                if (yeniSayi < 0 || yeniSayi > toplamBolum) {
-                        throw new IllegalArgumentException(
-                                "İzlenen bölüm sayısı 0 ile toplam bölüm sayısı arasında olmalı." 
-                        );
-                }
-
-                if (yeniSayi == izlenenBolum) {
-                        return;
-                }
-
-                durumuKaydet();
-                izlenenBolum = yeniSayi;
-        }
-        public void icerikBilgileriniGuncelle(
-                String yeniBaslik, int yeniToplamBolum) {
-           if (yeniBaslik == null || yeniBaslik.trim().isEmpty()) {
-                   throw new IllegalArgumentException("Başlık boş olamaz.");
-           }
-                if (yeniToplamBolum < 0) {
-                        throw new IllegalArgumentException(
-                                "Toplam bölüm sayısı negatif olamaz."
-                                );
-                }
-                if (yeniToplamBolum < izlenenBolum) {
-                        throw new IllegalArgumentException(
-                                "Toplam bölüm sayısı izlenen bölüm sayısından az olamaz."
-                                );
-                }
-
-                if (yeniBaslik.equals(baslik)
-                    && yeniToplamBolum == toplamBolum) {
-                        return;
-                }
-
-                durumuKaydet();
-                baslik = yeniBaslik;
-                toplamBolum = yeniToplamBolum;
-        }
-        
-        public boolean geriAl(){
-          if(tepe == null){
-            return false;
-          }
-
-          baslik = tepe.baslik;
-          toplamBolum = tepe.toplamBolum;
-          izlenenBolum = tepe.izlenenBolum;
-          izlendiMi = tepe.izlendiMi;
-          planSirasi = tepe.planSirasi;
-          tepe = tepe.onceki;      
-
-          return true;
         }
 
-        public void gecmisiYazdir() {
-                if(tepe == null) {
-                        System.out.println("Geçmiş boş.");
-                        return;
-                }
+        icerik.durumuGeriYukle(
+                tepe.ad,
+                tepe.tur,
+                tepe.sure,
+                tepe.izlendiMi,
+                tepe.puan,
+                tepe.izlemeDurumu
+        );
 
-                Durum gecici = tepe;
-                int sira = 1;
-
-                System.out.println("Güncelleme geçmişi (en son işlem önce):");
-
-                while (gecici != null) {
-                        System.out.println(
-                                sira + ". " + gecici.baslik + ": "
-                                + gecici.izlenenBolum + "/" + gecici.toplamBolum
-                                + " bölüm, izlendi mi: " + gecici.izlendiMi
-                                + ", plan sırası: " + gecici.planSirasi
-                        );
-
-                        gecici = gecici.onceki;
-                        sira++;
-                }
-           } 
-        @Override
-        public String toString(){
-          return baslik + ": " + izlenenBolum + "/" +toplamBolum
-            + " bölüm, izlendi mi: " +izlendiMi
-            + ", plan sırası: " + planSirasi;      
+        if (icerik instanceof Dizi && tepe.toplamBolum != null) {
+            ((Dizi) icerik).bolumDurumunuGeriYukle(
+                    tepe.toplamBolum,
+                    tepe.izlenenBolum
+            );
         }
 
-        public static void main(String[] args){
-                YiginTest dizi = new YiginTest("Örnek dizi", 10);
+        tepe = tepe.onceki;
+        return true;
+    }
 
-                System.out.println("Başlangıç: " + dizi);
+    public void gecmisiYazdir() {
+        if (tepe == null) {
+            System.out.println("Geri alınacak değişiklik yok.");
+            return;
+        }
 
-                dizi.bolumİzle();
-                System.out.println("Bir bölüm izledikten sonra: " + dizi);
+        Durum gecici = tepe;
+        int sira = 1;
 
-                dizi.planSirasiniDegistir(2);
-                System.out.println("Plan sırası değişince: " + dizi);
+        System.out.println("Değişiklik geçmişi (en son değişiklik önce):");
 
-                dizi.izlendiDurumunuDegistir();
-                System.out.println("İzlendi durumu değişince: " + dizi);
+        while (gecici != null) {
+            String bolumBilgisi = "";
 
-                dizi.geriAl();
-                System.out.println("Geri alınınca: " + dizi);
+            if (gecici.izlenenBolum != null) {
+                bolumBilgisi = ", bölüm: "
+                        + gecici.izlenenBolum
+                        + "/"
+                        + gecici.toplamBolum;
+            }
 
-                dizi.izlenenBolumSayisiniGuncelle(5);
-                System.out.println("Bölüm sayısı güncellenince: " + dizi);
+            System.out.println(
+                    sira + ". " + gecici.ad
+                    + ", izlendi: " + gecici.izlendiMi
+                    + ", durum: " + gecici.izlemeDurumu
+                    + ", puan: " + gecici.puan
+                    + bolumBilgisi
+            );
 
-                dizi.icerikBilgileriniGuncelle("Yeni Dizi", 12);
-                System.out.println("İçerik bilgileri güncellenince: " + dizi);
-
-                dizi.gecmisiYazdir();
-
-                dizi.geriAl();
-                System.out.println("Geri alınınca: " + dizi);
-
-                dizi.geriAl();
-                System.out.println("Bir kez daha geri alınınca: " + dizi);
-
-                YiginTest sinirTesti = new YiginTest("Sınır Test", 2);
-                sinirTesti.izlenenBolumSayisiniGuncelle(2);
-
-                boolean yeniBolumIzlendi = sinirTesti.bolumIzle();
-
-                System.out.println(
-                        "Toplam bölüme ulaşıldıktan sonra yeni bölüm izleme sonucu: "
-                        + yeniBolumIzlendi
-                );
-       } 
+            gecici = gecici.onceki;
+            sira++;
+        }
+    }
 }
