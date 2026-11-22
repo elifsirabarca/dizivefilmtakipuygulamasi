@@ -1,11 +1,4 @@
-class Icerik{
-  String ad;
-  String tur;
 
-  public Icerik(String ad, String tur) {
-    this.ad = ad;
-    this.tur =tur;}
-}
 
 class Dugum{
   Icerik veri;
@@ -29,9 +22,9 @@ public IzlemePlaniKuyrugu(){
   public boolean bosMu(){
     return bas == null;
   }
-  public void sirayaEkle(String ad,String tur){
-    Icerik yeniIcerik = new Icerik(ad,tur);
-    Dugum yeniDugum= new Dugum(yeniIcerik);
+  public void sirayaEkle(Icerik icerik){
+    
+    Dugum yeniDugum= new Dugum(icerik);
       if  (bosMu()) {
       bas =yeniDugum;
       son = yeniDugum;
@@ -40,7 +33,7 @@ public IzlemePlaniKuyrugu(){
       son.sonraki= yeniDugum;
       son = yeniDugum;
     }
-    System.out.println("-> \"" +ad + "\" izleme planına eklendi.");
+    System.out.println("-> \"" +icerik.getAd() + "\" izleme planına eklendi.");
       }
 
   public void siradanCikar(){
@@ -48,7 +41,7 @@ public IzlemePlaniKuyrugu(){
       System.out.println("uyarı: izleme planı zaten boş!");
       return;
     }
-    System.out.println("<- \"" +bas.veri.ad + "\" izlendi/ plandan çıkarıldı ve sıradan düşürüldü");
+    System.out.println("<- \"" +bas.veri.get.Ad() + "\" izlendi/ plandan çıkarıldı ve sıradan düşürüldü");
     bas = bas.sonraki;
     if(bas== null){
       son= null;
@@ -59,7 +52,7 @@ public IzlemePlaniKuyrugu(){
       System.out.println("izleme planında şu anda hiç içerik yok.");
     } 
     else{
-      System.out.println("sıradaki izlenecek içerik: "+bas.veri.ad +" ( " +bas.veri.tur +")");
+      System.out.println("sıradaki izlenecek içerik: "+bas.veri.getAd() +" ( " +bas.veri.getTur() +")");
     }
   }
     public void planiGoster(){
@@ -68,7 +61,7 @@ public IzlemePlaniKuyrugu(){
         Dugum gecici =bas;
         int sira =1;
         while (gecici != null){
-          System.out.println(sira +"." +gecici.veri.ad +"(" +gecici.veri.tur +")");
+          System.out.println(sira +"." +gecici.veri.getAd() +"(" +gecici.veri.getTur() +")");
           gecici =gecici.sonraki;
           sira ++;
         }
@@ -82,9 +75,9 @@ public IzlemePlaniKuyrugu(){
 
         System.out.println(" ~~ İZLEME PLANI (KUYRUK) TESTİ~~");
         
-        izlemePlani.sirayaEkle("Inception " ,"Film");
-        izlemePlani.sirayaEkle("Breaking Bad " ,"dizi");
-        izlemePlani.sirayaEkle("Interstellar " ,"Film");
+        izlemePlani.sirayaEkle(new Film(1, "Inception " ,"Film", 148, "Christopher Nolan"));
+        izlemePlani.sirayaEkle(new Dizi(2, "Breaking Bad " ,"Dizi", 47, 62));
+        izlemePlani.sirayaEkle(new Film(3, "Interstellar " ,"Film", 169, "Christopher Nolan"));
 
         
         izlemePlani.planiGoster();
