@@ -41,7 +41,7 @@ public IzlemePlaniKuyrugu(){
       System.out.println("uyarı: izleme planı zaten boş!");
       return;
     }
-    System.out.println("<- \"" +bas.veri.get.Ad() + "\" izlendi/ plandan çıkarıldı ve sıradan düşürüldü");
+    System.out.println("<- \"" +bas.veri.getAd() + "\" izlendi/ plandan çıkarıldı ve sıradan düşürüldü");
     bas = bas.sonraki;
     if(bas== null){
       son= null;
