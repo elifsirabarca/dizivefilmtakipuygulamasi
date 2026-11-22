@@ -1,3 +1,4 @@
+//içerik dizileri üzerinde filtreleme ve ikili  arama işlemlerini gerçekleştiren yardımcı sınıftır.
 public class IcerikSorgulayici {
 
     public static Icerik[] sorgula(Icerik[] kaynak, SorguFiltresi filtre) {
