@@ -38,6 +38,14 @@ abstract class Icerik {
     this.durum=durum;
     this.izlendiMi=(durum==IzlemeDurumu.TAMAMLANDI);
   }
+  public void durumuGeriYukle(String ad, String tur, int sure, boolean izlendiMi, double puan, IzlemeDurumu durum) {
+    this.ad=ad;
+    this.tur=tur;
+    this.sure=sure;
+    this.izlendiMi=izlendiMi;
+    this.puan=puan;
+    this.durum=durum;
+  }
    public abstract int toplamSure();
    public abstract int kalanSure();
    public abstract double tamamlanmaOrani();
@@ -109,7 +117,10 @@ class Dizi extends Icerik {
     }
     return false;
   }
-
+  public void bolumDurumunuGeriYukle(int toplamBolum, int izlenenBolum) {
+    this.toplamBolum=toplamBolum;
+    this.IzlenenBolum=izlenenBolum;
+  }
   @Override
   public int toplamSure() {
     return toplamBolum*getSure();
