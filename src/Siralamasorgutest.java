@@ -18,13 +18,13 @@ public class SiralamaSorguTest {
     }
 
     private static Icerik[] ornekVeri() {
-        Film inception = new Film(1, "Inception", "Bilim kurgu", 148);
+        Film inception = new Film(1, "Inception", "Bilim kurgu", 148, "Christopher Nolan");
         inception.izlendiIsaretle(true);                         
 
         Dizi dark = new Dizi(2, "Dark", "Gerilim", 26, 55);      
         dark.bolumIzle(10);                                      
 
-        Film avatar = new Film(3, "Avatar", "Bilim kurgu", 162); 
+        Film avatar = new Film(3, "Avatar", "Bilim kurgu", 162,"James Cameron"); 
 
         Dizi friends = new Dizi(4, "Friends", "Komedi", 10, 22); 
         friends.bolumIzle(5);                                    
