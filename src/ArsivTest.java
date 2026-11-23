@@ -119,7 +119,7 @@ class Dizi extends Icerik {
   }
   public void bolumDurumunuGeriYukle(int toplamBolum, int izlenenBolum) {
     this.toplamBolum=toplamBolum;
-    this.IzlenenBolum=izlenenBolum;
+    this.izlenenBolum=izlenenBolum;
   }
   @Override
   public int toplamSure() {
